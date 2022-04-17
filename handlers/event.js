@@ -1,13 +1,16 @@
-const { readdirSync } = require("fs")
+import * as ready from "../events/client/ready.js";
+import * as message from "../events/guild/message.js";
 
-module.exports = (client) => {
-    const load = dirs => {    
-        const events = readdirSync(`./events/${dirs}/`).filter(d => d.endsWith('.js'));
-        for (let file of events) {
-            const evt = require(`../events/${dirs}/${file}`);
-            let eName = file.split('.')[0];
-            client.on(eName, evt.bind(null, client));
-          };
-        };
-        ["client", "guild"].forEach(x => load(x));
+const LoadEvents = (client) => {
+  const events = [ready, message];
+
+  const load = (events) => {
+    events.forEach((event) => {
+      client.on(event.eventName, event.eventFunction.bind(null, client));
+    });
+  };
+
+  load(events);
 };
+
+export default LoadEvents;

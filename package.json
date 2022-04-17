@@ -3,6 +3,7 @@
   "version": "2.2.1",
   "description": "Very simple giveaway bot made with discord.js and discord-giveaways",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,8 +14,8 @@
   "author": "https://github.com/fez6",
   "license": "MIT",
   "dependencies": {
-    "discord-giveaways": "^4.4.3",
-    "discord.js": "^12.5.3",
-    "ms": "^2.1.2"
+    "discord-giveaways": "^5.1.1",
+    "discord.js": "^13.6.0",
+    "ms": "^2.1.3"
   }
 }

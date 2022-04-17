@@ -1,13 +1,23 @@
-const { readdirSync } = require("fs")
+import * as end from "../commands/Giveaways/end.js";
+import * as reroll from "../commands/Giveaways/reroll.js";
+import * as start from "../commands/Giveaways/start.js";
+import * as help from "../commands/Main/help.js";
 
-module.exports = (client) => {
-    const load = dirs => {
-        const commands = readdirSync(`./commands/${dirs}/`).filter(d => d.endsWith('.js'));
-        for (let file of commands) {
-            let pull = require(`../commands/${dirs}/${file}`);
-            client.commands.set(pull.config.name, pull);
-            if (pull.config.aliases) pull.config.aliases.forEach(a => client.aliases.set(a, pull.config.name));
-          };
-        };
-        ["Main", "Giveaways"].forEach(x => load(x));
+const LoadCommands = (client) => {
+  const commands = [end, reroll, start, help];
+
+  const load = (commands) => {
+    commands.forEach((command) => {
+      client.commands.set(command.config.name, command);
+      if (command.config.aliases) {
+        command.config.aliases.forEach((alias) => {
+          client.aliases.set(alias, command.config.name);
+        });
+      }
+    });
+  };
+
+  load(commands);
 };
+
+export default LoadCommands;
