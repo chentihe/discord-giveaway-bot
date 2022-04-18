@@ -6,6 +6,7 @@ const LoadEvents = (client) => {
 
   const load = (events) => {
     events.forEach((event) => {
+      // bind() is for messageCreate
       client.on(event.eventName, event.eventFunction.bind(null, client));
     });
   };

@@ -1,6 +1,5 @@
 import ms from "ms";
 import fs from "fs";
-import multipleEntries from "../../utils/bonus";
 
 const { Giveaway_Options } = JSON.parse(
   fs.readFileSync("config.json", "utf-8")
@@ -16,9 +15,11 @@ const config = {
 };
 
 const run = async (client, message, args) => {
+  const isManageMessages = message.member.permissionsIn(message.channel).toArray().includes("MANAGE_MESSAGES");
+
   if (Giveaway_Options.giveawayManagerID) {
     if (
-      !message.member.hasPermission("MANAGE_MESSAGES") &&
+      !isManageMessages &&
       !message.member.roles.cache.some(
         (r) => r.id === Giveaway_Options.giveawayManagerID
       )
@@ -29,7 +30,7 @@ const run = async (client, message, args) => {
     }
   } else {
     if (
-      !message.member.hasPermission("MANAGE_MESSAGES") &&
+      !isManageMessages &&
       !message.member.roles.cache.some((r) => r.name === "Giveaways")
     ) {
       return message.channel.send(
@@ -38,28 +39,28 @@ const run = async (client, message, args) => {
     }
   }
 
-  let giveawayChannel = message.mentions.channels.first();
+  let giveawayChannel = message.channel;
   if (!giveawayChannel) {
     return message.channel.send(
       ":boom: Uh oh, I couldn't find that channel! Try again!"
     );
   }
 
-  let giveawayDuration = args[1];
+  let giveawayDuration = args[0];
   if (!giveawayDuration || isNaN(ms(giveawayDuration))) {
     return message.channel.send(
       ":boom: Hm. you haven't provided a duration. Can you try again?"
     );
   }
 
-  let giveawayNumberWinners = args[2];
+  let giveawayNumberWinners = args[1];
   if (isNaN(giveawayNumberWinners) || parseInt(giveawayNumberWinners) <= 0) {
     return message.channel.send(
       ":boom: Uh... you haven't provided the amount of winners."
     );
   }
 
-  let giveawayPrize = args.slice(3).join(" ");
+  let giveawayPrize = args.slice(2).join(" ");
   if (!giveawayPrize) {
     return message.channel.send(
       ":boom: Oh, it seems like you didn't give me a valid prize!"
@@ -74,10 +75,12 @@ const run = async (client, message, args) => {
       .send(`<@&${Giveaway_Options.giveawayRoleID}>`)
       .then((msg) => msg.delete({ timeout: 1000 }));
     client.giveawaysManager.start(giveawayChannel, {
-      time: ms(giveawayDuration),
+      duration: ms(giveawayDuration),
       prize: giveawayPrize,
       winnerCount: parseInt(giveawayNumberWinners),
       hostedBy: Giveaway_Options.hostedBy ? message.author : null,
+      botsCanWin: false,
+      reaction: ":tada:",
       messages: {
         giveaway: ":tada: **GIVEAWAY** :tada:",
         giveawayEnded: ":tada: **GIVEAWAY ENDED** :tada:",
@@ -89,20 +92,13 @@ const run = async (client, message, args) => {
         hostedBy: "Hosted by: {user}",
         winners: "winner(s)",
         endedAt: "Ended at",
-        units: {
-          seconds: "seconds",
-          minutes: "minutes",
-          hours: "hours",
-          days: "days",
-          pluralS: false,
-        },
       },
-      bonusEntries: [
-        {
-          bonus: multipleEntries(member),
-          cumulative: false
-        }
-      ]
+      // bonusEntries: [
+      //   {
+      //     bonus: multipleEntries(member),
+      //     cumulative: false
+      //   }
+      // ]
     });
   } else if (
     Giveaway_Options.showMention &&
@@ -179,32 +175,23 @@ const run = async (client, message, args) => {
     Giveaway_Options.giveawayMention
   ) {
     client.giveawaysManager.start(giveawayChannel, {
-      time: ms(giveawayDuration),
+      duration: ms(giveawayDuration),
       prize: giveawayPrize,
       winnerCount: parseInt(giveawayNumberWinners),
       hostedBy: Giveaway_Options.hostedBy ? message.author : null,
+      botsCanWin: false,
+      reaction: message.guild.emojis.resolve("965607040649154630"),
       messages: {
-        giveaway:
-          (Giveaway_Options.showMention ? `@everyone\n\n` : "") +
-          ":tada: **GIVEAWAY** :tada:",
-        giveawayEnded:
-          (Giveaway_Options.showMention ? `@everyone\n\n` : "") +
-          ":tada: **GIVEAWAY ENDED** :tada:",
-        timeRemaining: "Time remaining: **{duration}**!",
+        giveaway: ":tada: **GIVEAWAY** :tada:",
+        giveawayEnded: ":tada: **GIVEAWAY ENDED** :tada:",
         inviteToParticipate: "React with 🎉 to participate!",
-        winMessage: "Congratulations, {winners}! You won the **{prize}**!",
-        embedFooter: "Giveaways",
+        winMessage: "Congratulations, {winners}! You won the ** {this.prize} **!",
+        drawing: "Drawing: {timestamp}",
+        embedFooter: "Giveaways", // no show up
         noWinner: "Not enough entrants to determine a winner!",
-        hostedBy: "Hosted by: {user}",
+        hostedBy: `Hosted by: ${message.member}`,
         winners: "winner(s)",
         endedAt: "Ended at",
-        units: {
-          seconds: "seconds",
-          minutes: "minutes",
-          hours: "hours",
-          days: "days",
-          pluralS: false,
-        },
       },
     });
   } else if (!Giveaway_Options.giveawayMention) {

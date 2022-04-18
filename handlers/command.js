@@ -5,7 +5,7 @@ import * as help from "../commands/Main/help.js";
 
 const LoadCommands = (client) => {
   const commands = [end, reroll, start, help];
-
+  
   const load = (commands) => {
     commands.forEach((command) => {
       client.commands.set(command.config.name, command);
