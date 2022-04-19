@@ -53,8 +53,11 @@ client.giveawaysManager.on("giveawayEnded", (giveaway, winners) => {
 
 // add aliases and commands for client
 ["aliases", "commands"].forEach((x) => (client[x] = new Collection()));
+
 // add commands for client
 LoadCommands(client);
+
 // add events for client
 LoadEvents(client);
+
 client.login(Bot_Info.token);

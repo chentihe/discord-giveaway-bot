@@ -1,7 +1,8 @@
 import ms from "ms";
 import fs from "fs";
+import { MessageActionRow, MessageButton } from "discord.js";
 
-const { Giveaway_Options } = JSON.parse(
+const { Giveaway_Options, Bot_Info } = JSON.parse(
   fs.readFileSync("config.json", "utf-8")
 );
 
@@ -15,7 +16,10 @@ const config = {
 };
 
 const run = async (client, message, args) => {
-  const isManageMessages = message.member.permissionsIn(message.channel).toArray().includes("MANAGE_MESSAGES");
+  const isManageMessages = message.member
+    .permissionsIn(message.channel)
+    .toArray()
+    .includes("MANAGE_MESSAGES");
 
   if (Giveaway_Options.giveawayManagerID) {
     if (
@@ -185,9 +189,10 @@ const run = async (client, message, args) => {
         giveaway: ":tada: **GIVEAWAY** :tada:",
         giveawayEnded: ":tada: **GIVEAWAY ENDED** :tada:",
         inviteToParticipate: "React with 🎉 to participate!",
-        winMessage: "Congratulations, {winners}! You won the ** {this.prize} **!",
+        winMessage:
+          "Congratulations, {winners}! You won the ** {this.prize} **!",
         drawing: "Drawing: {timestamp}",
-        embedFooter: "Giveaways", // no show up
+        embedFooter: "Giveaways",
         noWinner: "Not enough entrants to determine a winner!",
         hostedBy: `Hosted by: ${message.member}`,
         winners: "winner(s)",
@@ -222,9 +227,21 @@ const run = async (client, message, args) => {
     });
   }
 
-  message.channel.send(
-    `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in ${giveawayChannel}!`
+  const row = new MessageActionRow().addComponents(
+    new MessageButton()
+      .setLabel("Connect Wallet")
+      .setStyle("LINK")
+      .setURL(Bot_Info.validateUrl)
   );
+
+  message.channel.send({
+    content: "**Enter the button to validate how many NFTs do you have to earn more entries!!**",
+    components: [row]
+  });
+
+  // message.channel.send(
+  //   `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in ${giveawayChannel}!`
+  // );
 };
 
 export { config, run };
