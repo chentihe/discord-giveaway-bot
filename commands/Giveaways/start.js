@@ -1,6 +1,7 @@
 import ms from "ms";
 import fs from "fs";
-import { MessageActionRow, MessageButton } from "discord.js";
+import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
+import saveNftContract from "../../utils/etherscan/contract.js";
 
 const { Giveaway_Options, Bot_Info } = JSON.parse(
   fs.readFileSync("config.json", "utf-8")
@@ -64,7 +65,10 @@ const run = async (client, message, args) => {
     );
   }
 
-  let giveawayPrize = args.slice(2).join(" ");
+  let giveawayNft = args[2];
+  const nft = await saveNftContract(giveawayNft, client.database.nft);
+
+  let giveawayPrize = args.slice(3).join(" ");
   if (!giveawayPrize) {
     return message.channel.send(
       ":boom: Oh, it seems like you didn't give me a valid prize!"
@@ -97,12 +101,6 @@ const run = async (client, message, args) => {
         winners: "winner(s)",
         endedAt: "Ended at",
       },
-      // bonusEntries: [
-      //   {
-      //     bonus: multipleEntries(member),
-      //     cumulative: false
-      //   }
-      // ]
     });
   } else if (
     Giveaway_Options.showMention &&
@@ -178,13 +176,19 @@ const run = async (client, message, args) => {
     !Giveaway_Options.giveawayRoleID &&
     Giveaway_Options.giveawayMention
   ) {
-    client.giveawaysManager.start(giveawayChannel, {
+    const giveaway = await client.giveawaysManager.start(giveawayChannel, {
       duration: ms(giveawayDuration),
       prize: giveawayPrize,
       winnerCount: parseInt(giveawayNumberWinners),
       hostedBy: Giveaway_Options.hostedBy ? message.author : null,
       botsCanWin: false,
       reaction: message.guild.emojis.resolve("965607040649154630"),
+      bonusEntries: [
+        {
+          bonus: (member) => fetchNftAmount(member, giveawayNft),
+          cumulative: false
+        },
+      ],
       messages: {
         giveaway: ":tada: **GIVEAWAY** :tada:",
         giveawayEnded: ":tada: **GIVEAWAY ENDED** :tada:",
@@ -198,6 +202,24 @@ const run = async (client, message, args) => {
         winners: "winner(s)",
         endedAt: "Ended at",
       },
+    });
+    const row = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setLabel("Validate NOW!")
+        .setStyle("PRIMARY")
+        .setCustomId("validate")
+    );
+
+    const embeds = new MessageEmbed()
+    .setTitle("NFT Contract")
+    .addField("Giveaway:", `${giveaway.messageId}`)
+    .addField("Contract Name:", `${nft.name}`)
+    .addField("Contract Address:", `${giveawayNft}`)
+
+    message.channel.send({
+      content: `**Click the button to validate how many NFTs do you have to earn more entries!!**`,
+      embeds: [embeds],
+      components: [row],
     });
   } else if (!Giveaway_Options.giveawayMention) {
     client.giveawaysManager.start(giveawayChannel, {
@@ -226,18 +248,6 @@ const run = async (client, message, args) => {
       },
     });
   }
-
-  const row = new MessageActionRow().addComponents(
-    new MessageButton()
-      .setLabel("Connect Wallet")
-      .setStyle("LINK")
-      .setURL(Bot_Info.validateUrl)
-  );
-
-  message.channel.send({
-    content: "**Enter the button to validate how many NFTs do you have to earn more entries!!**",
-    components: [row]
-  });
 
   // message.channel.send(
   //   `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in ${giveawayChannel}!`
