@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 
 class NftAmountService {
   constructor(sequelize) {
-    this.NftAmount = sequelize.define("Nft", {
+    this.NftAmount = sequelize.define("NftAmount", {
       contractId: DataTypes.TEXT,
       userId: DataTypes.BIGINT,
       userAccountAddress: DataTypes.TEXT,
@@ -10,12 +10,18 @@ class NftAmountService {
     });
   }
 
+  init() {
+    this.NftAmount.sync();
+  }
+
   async createNftAmount(nftAmount) {
-    return await this.NftAmount.create({
-      contractId: nftAmount.contractId,
-      userId: nftAmount.userId,
-      userAccountAddres: nftAmount.userAccountAddres,
-      nftAmount: nftAmount.nftAmount,
+    return await this.NftAmount.findOrCreate({
+      where: {
+        contractId: nftAmount.contractId,
+        userId: nftAmount.userId,
+        userAccountAddres: nftAmount.userAccountAddres,
+        nftAmount: nftAmount.nftAmount,
+      },
     });
   }
 

@@ -9,12 +9,19 @@ class NftService {
     });
   }
 
+  init() {
+    this.Nft.sync();
+  }
+
   async createNft(nft) {
-    return await this.Nft.create({
-      contractId: nft.contractId,
-      name: nft.name,
-      abi: nft.abi,
+    const [Nft, created] = await this.Nft.findOrCreate({
+      where: {
+        contractId: nft.contractId,
+        name: nft.name,
+        abi: nft.abi,
+      },
     });
+    return Nft;
   }
 
   async retrieveNft(contractId) {

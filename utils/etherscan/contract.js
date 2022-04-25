@@ -21,13 +21,11 @@ const saveNftContract = async (address, database) => {
   const data = await response.json();
   const contract = data.result.shift();
   const newNft = {
-      contactId: address,
+      contractId: address,
       name: contract.ContractName,
       abi: contract.ABI
   }
-  const nft = await database.createNft(newNft);
-  console.log(`save a new nft ${nft.name} into database!`);
-  return nft;
+  return await database.createNft(newNft);
 };
 
 export default saveNftContract;
