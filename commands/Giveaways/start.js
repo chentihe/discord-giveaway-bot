@@ -2,6 +2,7 @@ import ms from "ms";
 import fs from "fs";
 import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
 import saveNftContract from "../../utils/etherscan/contract.js";
+import fetchNftAmount from "../../utils/bonus.js";
 
 const { Giveaway_Options, Bot_Info } = JSON.parse(
   fs.readFileSync("config.json", "utf-8")

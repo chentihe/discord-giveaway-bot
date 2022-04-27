@@ -13,7 +13,7 @@ class NftService {
     this.Nft.sync();
   }
 
-  async createNft(nft) {
+  async create(nft) {
     const [Nft, created] = await this.Nft.findOrCreate({
       where: {
         contractId: nft.contractId,
@@ -24,7 +24,7 @@ class NftService {
     return Nft;
   }
 
-  async retrieveNft(contractId) {
+  async retrieve(contractId) {
     return await this.Nft.findOne({ where: { contractId: contractId } });
   }
 }

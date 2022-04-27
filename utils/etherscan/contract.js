@@ -25,7 +25,7 @@ const saveNftContract = async (address, database) => {
       name: contract.ContractName,
       abi: contract.ABI
   }
-  return await database.createNft(newNft);
+  return await database.create(newNft);
 };
 
 export default saveNftContract;

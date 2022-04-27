@@ -4,6 +4,9 @@ import { GiveawaysManager } from "discord-giveaways";
 import Database from "./db/databaseConnector.js";
 import LoadCommands from "./handlers/command.js";
 import LoadEvents from "./handlers/event.js";
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
 
 const { Bot_Info } = JSON.parse(fs.readFileSync("config.json", "utf-8"));
 
@@ -38,3 +41,30 @@ LoadCommands(client);
 LoadEvents(client);
 
 client.login(Bot_Info.token);
+
+
+const app = express();
+const port = process.env.PORT || 7000;
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get("/nfts/:nftId", async (req, res) => {
+  const nft = await client.database.nft.retrieve(req.params.nftId);
+  return res.send(JSON.stringify(nft));
+});
+
+app.get("/nftamounts/:contractId/:userId", async (req, res) => {
+  const nftAmount = await client.database.nftAmount.retrieve(req.params.contractId, req.params.userId);
+  return res.send(JSON.stringify(nftAmount));
+});
+
+app.post("/nftamounts", async (req, res) => {
+  const data = req.body;
+  const nftAmount = await client.database.nftAmount.create(data);
+  return res.send(JSON.stringify(nftAmount));
+});
+
+app.listen(port, () => {
+  console.log(`RUN ${port}`);
+});

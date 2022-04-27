@@ -24,7 +24,7 @@ const eventFunction = async (client, interaction) => {
     new MessageButton()
       .setLabel("Connect Wallet")
       .setStyle("LINK")
-      .setURL(url)
+      .setURL(url.toString())
   );
 
   interaction.reply({
