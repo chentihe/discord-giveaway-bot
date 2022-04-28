@@ -9,8 +9,8 @@ const fetchNftAmount = async (member, contractId) => {
             "Content-Type": "application/json"
         }
     });
-    const nftAmount = await response.json();
-    return nftAmount.nftAmount;
+    const bonus = await response.json();
+    return bonus.nftAmount;
 }
 
 export default fetchNftAmount;

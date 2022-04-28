@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import fetch from "node-fetch";
+
 dotenv.config();
 
 const saveNftContract = async (address, database) => {

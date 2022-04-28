@@ -1,9 +1,7 @@
 import { MessageEmbed } from "discord.js";
-import fs from "fs";
+import dotenv from "dotenv";
 
-const { Bot_Info } = JSON.parse(
-  fs.readFileSync("config.json", "utf-8")
-);
+dotenv.config();
 
 const config = {
   name: "help",
@@ -22,11 +20,11 @@ const run = async (client, message, args) => {
   };
 
   const embed = new MessageEmbed()
-    .setAuthor(
-      client.user.username,
-      client.user.displayAvatarURL({ ...avatarOptions }),
-      "https://github.com/fez6/discord-giveaway-bot"
-    )
+    .setAuthor({
+      name: client.user.username,
+      url: "https://github.com/fez6/discord-giveaway-bot",
+      iconURL: client.user.displayAvatarURL({ ...avatarOptions }),
+    })
     .setThumbnail(client.user.displayAvatarURL({ ...avatarOptions }))
     .setTitle("Help")
     .setURL("https://github.com/fez6/discord-giveaway-bot")
@@ -36,7 +34,7 @@ const run = async (client, message, args) => {
     )
     .addFields(
       {
-        name: `🎉 ${Bot_Info.prefix}start [channel] [duration] [winners] [prize]`,
+        name: `🎉 ${process.env.COMMAND_PREFIX}start [channel] [duration] [winners] [prize]`,
         value: [
           "The channel has to be visible to the giveaway bot.",
           "Duration is stated in a number and a time variable.",
@@ -47,34 +45,34 @@ const run = async (client, message, args) => {
       {
         name: "👥 Example:",
         value: [
-          `⌨️ ${Bot_Info.prefix}start #general 10m 1 $9.99 Nitro`,
+          `⌨️ ${process.env.COMMAND_PREFIX}start #general 10m 1 $9.99 Nitro`,
           `➡️ Creates a \`10 minute\` long giveaway with \`1\` winner and`,
           `\`$9.99 Nitro\` as a prize in \`#general\`.`,
         ].join("\n"),
       },
       {
-        name: `❌ ${Bot_Info.prefix}end [message-id]`,
+        name: `❌ ${process.env.COMMAND_PREFIX}end [message-id]`,
         value:
           "Message-ID has to be the **ID** of the giveaway message.\n**Not the link!**",
       },
       {
         name: "👥 Example:",
-        value: `⌨️ ${Bot_Info.prefix}end 892678258946659587\n➡️ Ends the giveaway with the message-ID \`892678258946659587\`.`,
+        value: `⌨️ ${process.env.COMMAND_PREFIX}end 892678258946659587\n➡️ Ends the giveaway with the message-ID \`892678258946659587\`.`,
       },
       {
-        name: `🔍 ${Bot_Info.prefix}reroll [message-id]`,
+        name: `🔍 ${process.env.COMMAND_PREFIX}reroll [message-id]`,
         value:
           "Message-ID has to be the **ID** of the giveaway message.\n**Not the link!**",
       },
       {
         name: "👥 Example:",
-        value: `⌨️ ${Bot_Info.prefix}reroll 892678258946659587\n➡️ Selects new winners for the giveaway with the message-ID \`892678258946659587\`.`,
+        value: `⌨️ ${process.env.COMMAND_PREFIX}reroll 892678258946659587\n➡️ Selects new winners for the giveaway with the message-ID \`892678258946659587\`.`,
       }
     )
-    .setFooter(
-      "Made with 💖 and discord.js by fez",
-      client.user.displayAvatarURL({ ...avatarOptions })
-    );
+    .setFooter({
+      text: "Made with 💖 and discord.js by fez",
+      iconURL: client.user.displayAvatarURL({ ...avatarOptions }),
+    });
 
   if (message.guild) {
     message.channel.send("Check your DMs!");

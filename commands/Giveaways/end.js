@@ -32,6 +32,7 @@ const run = async (client, message, args) => {
       ":boom: Hm. I can't seem to find a giveaway for `" + args.join(" ") + "`."
     );
   }
+
   client.giveawaysManager
     .edit(giveaway.messageID, {
       setEndTimestamp: Date.now(),

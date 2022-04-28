@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import NftService from "./service/nft.js";
-import NftAmountService from "./service/nftAmount.js";
+import BonusService from "./service/bonus.js";
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ class Database {
       },
     });
     this.nft = new NftService(this.sequelize);
-    this.nftAmount = new NftAmountService(this.sequelize);
+    this.bonus = new BonusService(this.sequelize);
     this.init(this);
     this.connect();
   }

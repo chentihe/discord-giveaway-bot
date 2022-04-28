@@ -1,5 +1,4 @@
 import { Client, Collection, Intents } from "discord.js";
-import fs from "fs";
 import { GiveawaysManager } from "discord-giveaways";
 import Database from "./db/databaseConnector.js";
 import LoadCommands from "./handlers/command.js";
@@ -7,8 +6,9 @@ import LoadEvents from "./handlers/event.js";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 
-const { Bot_Info } = JSON.parse(fs.readFileSync("config.json", "utf-8"));
+dotenv.config();
 
 const client = new Client({
   intents: [
@@ -40,8 +40,7 @@ LoadCommands(client);
 // add events for client & client.giveawaysManger
 LoadEvents(client);
 
-client.login(Bot_Info.token);
-
+client.login(process.env.DISCORD_BOT_TOKEN);
 
 const app = express();
 const port = process.env.PORT || 7000;
@@ -49,20 +48,25 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/nfts/:nftId", async (req, res) => {
-  const nft = await client.database.nft.retrieve(req.params.nftId);
-  return res.send(JSON.stringify(nft));
+// fetch nft
+app.get("/nfts/:nftId", (req, res) => {
+  return client.database.nft
+    .retrieve(req.params.nftId)
+    .then((data) => res.send(JSON.stringify(data)));
 });
 
-app.get("/nftamounts/:contractId/:userId", async (req, res) => {
-  const nftAmount = await client.database.nftAmount.retrieve(req.params.contractId, req.params.userId);
-  return res.send(JSON.stringify(nftAmount));
+// fetch nftamounts
+app.get("/nftamounts/:contractId/:userId", (req, res) => {
+  return client.database.bonus
+    .retrieve(req.params.contractId, req.params.userId)
+    .then((data) => res.send(JSON.stringify(data)));
 });
 
-app.post("/nftamounts", async (req, res) => {
-  const data = req.body;
-  const nftAmount = await client.database.nftAmount.create(data);
-  return res.send(JSON.stringify(nftAmount));
+// create nftamounts
+app.post("/nftamounts", (req, res) => {
+  return client.database.bonus
+    .create(req.body)
+    .then((data) => res.send(JSON.stringify(data)));
 });
 
 app.listen(port, () => {

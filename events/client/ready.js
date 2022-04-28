@@ -1,8 +1,6 @@
-import fs from "fs";
+import dotenv from "dotenv";
 
-const { Bot_Info } = JSON.parse(
-  fs.readFileSync("config.json", "utf-8")
-);
+dotenv.config();
 
 const eventName = "ready";
 
@@ -11,7 +9,7 @@ const eventFunction = async (client) => {
     `Bot: ${client.user.tag}\nChannels: ${client.channels.cache.size}\nServers: ${client.guilds.cache.size}\nUsers: ${client.users.cache.size}`
   );
 
-  let statuses = [`${Bot_Info.prefix}start | ${Bot_Info.prefix}help `];
+  let statuses = [`${process.env.COMMAND_PREFIX}start | ${process.env.COMMAND_PREFIX}help `];
 
   setInterval(function () {
     let status = statuses[Math.floor(Math.random() * statuses.length)];
