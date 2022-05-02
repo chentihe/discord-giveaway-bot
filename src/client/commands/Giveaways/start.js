@@ -1,7 +1,7 @@
 import ms from "ms";
 import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
-import saveNftContract from "../../utils/etherscan/contract.js";
-import fetchNftAmount from "../../utils/bonus.js";
+import saveNftContract from "../../../utils/etherscan/contract.js";
+import fetchNftAmount from "../../../utils/bonus.js";
 
 const config = {
   name: "start",

@@ -6,10 +6,15 @@ import * as reactionRemoved from "../events/giveaway/reactionRemoved.js";
 import * as ended from "../events/giveaway/ended.js";
 
 const LoadEvents = (client) => {
-  const events = [ready, message, interaction];
+  const onceEvent = [ready];
+  const events = [message, interaction];
   const giveawayEvents = [reactionAdded, reactionRemoved, ended];
 
   const load = (events, giveawayEvents) => {
+    events.forEach((event) => {
+      client.once(event.eventName, event.eventFunction.bind(null, client));
+    });
+
     events.forEach((event) => {
       // bind() is for messageCreate
       client.on(event.eventName, event.eventFunction.bind(null, client));
