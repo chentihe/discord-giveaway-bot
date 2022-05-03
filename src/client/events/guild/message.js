@@ -1,23 +1,29 @@
-import fs from "fs";
+import dotenv from "dotenv";
 
-const { Bot_Info } = JSON.parse(
-  fs.readFileSync("config.json", "utf-8")
-);
+dotenv.config();
 
 const eventName = "messageCreate";
 
 const eventFunction = async (client, message) => {
   if (message.author.bot || message.channel.type === "dm") return;
 
-  let args = message.content.slice(Bot_Info.prefix.length).trim().split(/ +/g);
+  let args = message.content
+    .slice(process.env.COMMAND_PREFIX.length)
+    .trim()
+    .split(/ +/g);
+
   let cmd = args.shift().toLowerCase();
+
   if (message.content.match(new RegExp(`^<@!?${client.user.id}>( |)$`)))
     return message.channel.send(
-      `Try ${Bot_Info.prefix}help to see a list of my commands.`
+      `Try ${process.env.COMMAND_PREFIX}help to see a list of my commands.`
     );
-  if (!message.content.startsWith(Bot_Info.prefix)) return;
+
+  if (!message.content.startsWith(process.env.COMMAND_PREFIX)) return;
+
   let command =
     client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
+    
   if (command) command.run(client, message, args);
 };
 

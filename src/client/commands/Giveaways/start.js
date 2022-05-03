@@ -1,7 +1,7 @@
 import ms from "ms";
 import { MessageEmbed, MessageActionRow, MessageButton } from "discord.js";
-import saveNftContract from "../../utils/etherscan/contract.js";
-import fetchNftAmount from "../../utils/bonus.js";
+import saveNftContract from "../../../utils/etherscan/contract.js";
+import fetchNftAmount from "../../../utils/bonusEntries/bonus.js";
 
 const config = {
   name: "start",
@@ -42,7 +42,7 @@ const run = async (client, message, args) => {
   }
 
   let giveawayNft = args[3];
-  const nft = await saveNftContract(giveawayNft, client.database.nft);
+  const nft = await saveNftContract(giveawayNft);
 
   let giveawayPrize = args.slice(4).join(" ");
   if (!giveawayPrize) {
@@ -102,7 +102,7 @@ const run = async (client, message, args) => {
     );
 
   message.channel.send(
-    `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in ${giveawayChannel}!`
+    `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in <#${giveawayChannel}>!`
   );
 };
 

@@ -9,7 +9,9 @@ const eventFunction = async (client) => {
     `Bot: ${client.user.tag}\nChannels: ${client.channels.cache.size}\nServers: ${client.guilds.cache.size}\nUsers: ${client.users.cache.size}`
   );
 
-  let statuses = [`${process.env.COMMAND_PREFIX}start | ${process.env.COMMAND_PREFIX}help `];
+  let statuses = [
+    `${process.env.COMMAND_PREFIX}start | ${process.env.COMMAND_PREFIX}help `,
+  ];
 
   setInterval(function () {
     let status = statuses[Math.floor(Math.random() * statuses.length)];

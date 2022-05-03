@@ -1,7 +1,7 @@
-import fs from "fs";
+import dotenv from "dotenv";
 import { MessageActionRow, MessageButton } from "discord.js";
 
-const { Bot_Info } = JSON.parse(fs.readFileSync("config.json", "utf-8"));
+dotenv.config();
 
 const eventName = "interactionCreate";
 
@@ -12,19 +12,22 @@ const eventFunction = async (client, interaction) => {
   const user = interaction.user.id;
   const nft = fields.find((field) => field.name === "Contract Address:").value;
 
-  const url = new URL(Bot_Info.validateUrl);
+  const url = new URL(process.env.VALIDATE_URL);
   const params = {
     user: user,
     giveaway: giveaway,
     nft: nft,
   };
-  Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
+  
+  const query = new URLSearchParams(JSON.stringify(params));
+
+  const endpoint = url.toString() + query.toString();
 
   const row = new MessageActionRow().addComponents(
     new MessageButton()
       .setLabel("Connect Wallet")
       .setStyle("LINK")
-      .setURL(url.toString())
+      .setURL(endpoint)
   );
 
   interaction.reply({
