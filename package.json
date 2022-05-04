@@ -3,6 +3,7 @@
   "version": "2.2.1",
   "description": "Very simple giveaway bot made with discord.js and discord-giveaways",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./dist/index.js",

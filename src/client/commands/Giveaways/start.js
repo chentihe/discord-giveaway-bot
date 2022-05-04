@@ -102,7 +102,7 @@ const run = async (client, message, args) => {
     );
 
   message.channel.send(
-    `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in <#${giveawayChannel}>!`
+    `:tada: Done! The giveaway for the \`${giveawayPrize}\` is starting in ${giveawayChannel}!`
   );
 };
 

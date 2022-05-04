@@ -1,4 +1,4 @@
-import NftController from "../controller/NftController";
+import NftController from "../controller/NftController.js";
 import Route from "./route.js";
 
 class NftRoute extends Route {

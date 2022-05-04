@@ -13,14 +13,14 @@ const saveNftContract = async (address) => {
     apikey: process.env.ETHERSCAN_API_KEY,
   };
 
-  const query = new URLSearchParams(JSON.stringify(params));
+  url.search = new URLSearchParams(params);
 
-  const endpoint = url.toString() + query.toString();
+  const endpoint = url.href;
 
-  const contract = fetchApi({
+  const contract = await fetchApi({
     url: endpoint,
     headers: { "Content-Type": "application/json" },
-  }).then((data) => data.result.shift());
+  }, (data) => { return data.result.shift()});
 
   return fetchApi({
     url: process.env.BASE_URL + `/nfts/`,

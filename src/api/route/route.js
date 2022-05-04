@@ -5,8 +5,6 @@ class Route {
 
     prefix = "/";
 
-    setRoutes();
-
     getRouter() {
         return this.router;
     }
