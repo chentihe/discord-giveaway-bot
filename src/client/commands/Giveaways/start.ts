@@ -99,9 +99,8 @@ class StartCommand {
         setTimeout(() => message.delete(), ms(giveawayDuration))
       );
 
-    const textChannel = command.message.channel as TextChannel;
-    textChannel.send(
-      `:tada: Done! The giveaway for the \`${prize}\` is starting in ${giveawayChannel}!`
+    (command.message.channel as TextChannel).send(
+      `:tada: Done! The giveaway for the \`${prize}\` is starting in <#${giveawayChannel.id}>!`
     );
   }
 }
@@ -116,14 +115,14 @@ const config = {
 };
 
 const run = async (client: Bot, message: Message, args: Array<string>) => {
-  const isManageMessages = message.member
-    .permissionsIn(message.channel)
+  const isManageMessages = message.member!
+    .permissionsIn(message.channel as TextChannel)
     .toArray()
     .includes("MANAGE_MESSAGES");
 
   const messageChannel: TextChannel = message.channel as TextChannel;
 
-  let giveawayChannel = client.channels.cache
+  let giveawayChannel  = client.channels.cache
     .filter((channel) => channel instanceof TextChannel)
     .find((channel) => `<#${channel.id}>` === args[0]);
 
@@ -140,8 +139,8 @@ const run = async (client: Bot, message: Message, args: Array<string>) => {
     );
   }
 
-  let giveawayNumberWinners = args[2];
-  if (isNaN(giveawayNumberWinners) || parseInt(giveawayNumberWinners) <= 0) {
+  let giveawayNumberWinners : number = args[2];
+  if (isNaN(giveawayNumberWinners) || giveawayNumberWinners <= 0) {
     return message.channel.send(
       ":boom: Uh... you haven't provided the amount of winners."
     );
@@ -157,16 +156,16 @@ const run = async (client: Bot, message: Message, args: Array<string>) => {
     );
   }
 
-  const giveaway = await client.giveawaysManager.start(giveawayChannel, {
+  const giveaway = await client.giveawaysManager.start((giveawayChannel as TextChannel), {
     duration: ms(giveawayDuration),
     prize: giveawayPrize,
-    winnerCount: parseInt(giveawayNumberWinners),
+    winnerCount: giveawayNumberWinners,
     hostedBy: message.author,
     botsCanWin: false,
-    reaction: message.guild.emojis.resolve("965607040649154630"),
+    reaction: message.guild!.emojis.resolve("965607040649154630"),
     bonusEntries: [
       {
-        bonus: (member) => fetchNftAmount(member, giveawayNft),
+        bonus: (member) => fetchNftAmount(member!, giveawayNft),
         cumulative: false,
       },
     ],
@@ -197,7 +196,7 @@ const run = async (client: Bot, message: Message, args: Array<string>) => {
     .addField("Contract Name:", `${nft.name}`)
     .addField("Contract Address:", `${giveawayNft}`);
 
-  giveawayChannel
+  (giveawayChannel as TextChannel)
     .send({
       content: `**Click the button to validate how many NFTs do you have to earn more entries!!**`,
       embeds: [embeds],

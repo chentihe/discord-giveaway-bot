@@ -1,9 +1,7 @@
 import "reflect-metadata";
-import { Collection, Intents } from "discord.js";
+import { Intents } from "discord.js";
 import { Client } from "discordx";
 import { GiveawaysManager } from "discord-giveaways";
-import LoadCommands from "../client/handlers/command.js";
-import LoadEvents from "../client/handlers/event.js";
 
 import dotenv from "dotenv";
 
@@ -23,7 +21,7 @@ class Bot extends Client {
   constructor() {
     super({
       simpleCommand: {
-        prefix: "!",
+        prefix: "!g",
       },
       intents: [
         Intents.FLAGS.GUILDS,
@@ -32,17 +30,6 @@ class Bot extends Client {
         Intents.FLAGS.GUILD_MEMBERS,
       ],
     });
-
-    // add aliases and commands for client
-    ["aliases", "commands"].forEach((x) => (this[x] = new Collection()));
-
-    // add commands for client
-    LoadCommands(this);
-
-    // add events for client & client.giveawaysManger
-    LoadEvents(this);
-
-    this.login(process.env.DISCORD_BOT_TOKEN!);
   }
 
   public get giveawaysManager(): GiveawaysManager {

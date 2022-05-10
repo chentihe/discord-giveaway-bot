@@ -10,9 +10,9 @@ const LoadEvents = (client) => {
   const events = [message, interaction];
   const giveawayEvents = [reactionAdded, reactionRemoved, ended];
 
-  const load = (events, giveawayEvents) => {
-    events.forEach((event) => {
-      client.once(event.eventName, event.eventFunction.bind(null, client));
+  const load = (onceEvent, events, giveawayEvents) => {
+    onceEvent.forEach((onceEvent) => {
+      client.once(onceEvent.eventName, onceEvent.eventFunction.bind(null, client));
     });
 
     events.forEach((event) => {
@@ -25,7 +25,7 @@ const LoadEvents = (client) => {
     });
   };
 
-  load(events, giveawayEvents);
+  load(onceEvent, events, giveawayEvents);
 };
 
 export default LoadEvents;
