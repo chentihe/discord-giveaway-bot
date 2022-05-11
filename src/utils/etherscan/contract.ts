@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import fetch, { Response } from "node-fetch";
 import fetchApi from "../fetchApi";
 import { Nft } from "../../db/entity/Nft";
+import {RequestConfig} from "../request.config";
 
 dotenv.config();
 
@@ -22,18 +23,10 @@ const saveNftContract = async (address: string): Promise<Nft> => {
     status: string;
     message: string;
     result: Array<Object>;
-  }>({url: url,
-  }, (data: Object) => { return data.result.shift() });
+  }>(
+    {url: url.href}, (data: EtherSacn) => { return data.result.shift() });
 
-  const response: Response = await fetch(process.env.BASE_URL + `/nfts/`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({
-      newNft: newNft,
-    }),
-  });
+  const response: Response = await fetchApi();
 
   if (!response.ok) {
     throw new Error("[Discord] cannot save the nft!!");

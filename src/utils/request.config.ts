@@ -7,7 +7,7 @@ export enum RequestMethod {
 
 export interface RequestConfig {
   url: string;
-  method: RequestMethod;
+  method?: RequestMethod;
   headers?: any;
   body?: Object;
 }
