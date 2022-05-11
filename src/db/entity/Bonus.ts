@@ -6,14 +6,14 @@ export class Bonus {
   id!: number;
 
   @Column("text")
-  contractId?: string;
+  contractId!: string;
 
   @Column("bigint")
-  userId?: string;
+  userId!: string;
 
   @Column("text")
-  userAccountAddress?: string;
+  userAccountAddress!: string;
 
   @Column("int")
-  nftAmount?: number;
+  nftAmount!: number;
 }

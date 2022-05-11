@@ -12,4 +12,8 @@ class NftService {
   }
 }
 
+const nftService = new NftService();
+
+export { nftService };
+
 export default NftService;

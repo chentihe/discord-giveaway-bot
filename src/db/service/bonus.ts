@@ -14,4 +14,8 @@ class BonusService {
   }
 }
 
+const bonusService = new BonusService();
+
+export { bonusService };
+
 export default BonusService;

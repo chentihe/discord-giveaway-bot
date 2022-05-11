@@ -20,7 +20,7 @@ class NftController {
     };
   }
 
-  public get nftService(): NftService {
+  protected get nftService(): NftService {
     return this._nftService;
   }
 }

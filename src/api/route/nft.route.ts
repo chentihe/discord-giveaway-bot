@@ -1,8 +1,9 @@
 import NftController from "../controller/NftController";
+import { nftService } from "../../db/service/nft";
 import Route from "./route";
 
 class NftRoute extends Route {
-  private nftController = new NftController();
+  private _nftController: NftController = new NftController(nftService);
 
   constructor() {
     super();
@@ -10,13 +11,13 @@ class NftRoute extends Route {
     this.setRoutes();
   }
 
-  protected setRoutes() {
-    this.getRouter().get("/:nftId", this.getNftController().retrieve);
-    this.getRouter().post("/", this.getNftController().create);
+  protected setRoutes(): void {
+    this.router.get("/:nftId", this.nftController.retrieve);
+    this.router.post("/", this.nftController.create);
   }
 
-  public getNftController() {
-    return this.nftController;
+  protected get nftController(): NftController {
+      return this._nftController;
   }
 }
 

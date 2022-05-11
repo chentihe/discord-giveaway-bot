@@ -1,22 +1,22 @@
 import { Router } from "express";
 
 abstract class Route {
-    private router = Router();
+    private _router: Router = Router();
 
-    private prefix: string = "/";
+    private _prefix: string = "/";
 
     protected abstract setRoutes(): void;
 
-    public getRouter() {
-        return this.router;
+    public get router(): Router {
+        return this._router;
     }
 
-    protected setPrefix(prefix: string) {
-        this.prefix = prefix;
+    public setPrefix(prefix: string): void {
+        this._prefix = prefix;
     }
 
-    public getPrefix() {
-        return this.prefix;
+    public get prefix(): string {
+        return this._prefix;
     }
 }
 

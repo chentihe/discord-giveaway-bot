@@ -1,8 +1,9 @@
 import BonusController from "../controller/BonusController";
+import { bonusService } from "../../db/service/bonus";
 import Route from "./route";
 
 class BonusRoute extends Route {
-  private bonusController = new BonusController();
+  private _bonusController: BonusController = new BonusController(bonusService);
 
   constructor() {
     super();
@@ -10,13 +11,13 @@ class BonusRoute extends Route {
     this.setRoutes();
   }
 
-  protected setRoutes() {
-    this.getRouter().get("/:contractId/:userId", this.getBonusController().retrieve);
-    this.getRouter().post("/", this.getBonusController().create);
+  protected setRoutes(): void {
+    this.router.get("/:contractId/:userId", this.bonusController.retrieve);
+    this.router.post("/", this.bonusController.create);
   }
 
-  public getBonusController() {
-    return this.bonusController;
+  public get bonusController(): BonusController {
+    return this._bonusController;
   }
 }
 

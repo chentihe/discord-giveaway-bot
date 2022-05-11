@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 for (const route of router) {
-  app.use(route.getPrefix(), route.getRouter());
+  app.use(route.prefix, route.router);
 }
 
 export default app;

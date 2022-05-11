@@ -6,7 +6,6 @@ import { Nft } from "../../db/entity/Nft";
 dotenv.config();
 
 const saveNftContract = async (address: string): Promise<Nft> => {
-  const url: URL = new URL(process.env.ETHERSCAN_ENDPOINT!);
 
   const params: Object = {
     module: "contract",
@@ -15,15 +14,16 @@ const saveNftContract = async (address: string): Promise<Nft> => {
     apikey: process.env.ETHERSCAN_API_KEY,
   };
 
-  const query: URLSearchParams = new URLSearchParams(JSON.stringify(params));
+  const url: URL = new URL(process.env.ETHERSCAN_ENDPOINT!);
 
-  const endpoint: string = url.toString() + query.toString();
+  url.search = new URLSearchParams(JSON.stringify(params)).toString();
 
   const newNft: Object = await fetchApi<{
     status: string;
     message: string;
     result: Array<Object>;
-  }>(endpoint);
+  }>({url: url,
+  }, (data: Object) => { return data.result.shift() });
 
   const response: Response = await fetch(process.env.BASE_URL + `/nfts/`, {
     headers: {
