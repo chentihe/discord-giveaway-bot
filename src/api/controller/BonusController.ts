@@ -1,33 +1,26 @@
 import { Request, Response } from "express";
-import BonusService from "../../db/service/bonus";
+import { database } from "../../db/databaseConnector";
+import { Bonus } from "../../db/entity/bonus.entity";
+import { Repository } from "typeorm";
 
 class BonusController {
-  private _bonusService : BonusService;
+  private _bonusRepository = database.getRepository(Bonus);
 
-  constructor(bonusService: BonusService) {
-    this._bonusService = bonusService;
+  public async create(req: Request, res: Response) {
+    const data = await this.bonusRepository.save(req.body);
+    return res.status(201).send(JSON.stringify(data));
   }
 
-
-  public create() {
-    async (req: Request, res: Response) => {
-      const data = await this.bonusService.create(req.body);
-      return res.status(201).send(JSON.stringify(data));
-    };
+  public async retrieve(req: Request, res: Response) {
+    const data = await this.bonusRepository.findOneBy({
+      contractId: req.params.contractId,
+      userId: req.params.userId,
+    });
+    return res.status(200).send(JSON.stringify(data));
   }
 
-  public retrieve() {
-    async (req: Request, res: Response) => {
-      const data = await this.bonusService.retrieve(
-        req.params.contractId,
-        req.params.userId
-      );
-      return res.status(200).send(JSON.stringify(data));
-    };
-  }
-
-  protected get bonusService(): BonusService {
-    return this._bonusService;
+  protected get bonusRepository(): Repository<Bonus> {
+    return this._bonusRepository;
   }
 }
 

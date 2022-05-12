@@ -17,7 +17,7 @@ import {
 import saveNftContract from "../../../utils/etherscan/contract.js";
 import fetchNftAmount from "../../../utils/bonus.js";
 import Bot from "../../client";
-import { Nft } from "../../../db/entity/Nft";
+import { Nft } from "../../../db/entity/nft.entity";
 
 @Discord()
 class StartCommand {

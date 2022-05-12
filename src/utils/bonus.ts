@@ -1,13 +1,14 @@
 import { GuildMember } from "discord.js";
 import dotenv from "dotenv";
 import fetch, { Response } from "node-fetch";
-import { Bonus } from "../db/entity/Bonus";
+import { Bonus } from "../db/entity/bonus.entity";
 
 dotenv.config();
 
-const fetchNftAmount = async (
+const fetchNftAmount = async <T>(
   member: GuildMember,
-  contractId: string
+  contractId: string,
+  applyData: Function
 ): Promise<number> => {
   const response: Response = await fetch(
     process.env.BASE_URL + `/nftamounts/${contractId}/${member.user.id}`,
@@ -18,9 +19,9 @@ const fetchNftAmount = async (
     }
   );
 
-  const bonus: Bonus = await response.json().then(data => data as Bonus);
+  const data = await response.json().then((data) => data as T);
 
-  return bonus.nftAmount!;
+  return applyData(data) ? applyData(data) : data;
 };
 
 export default fetchNftAmount;

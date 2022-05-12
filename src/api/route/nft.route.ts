@@ -3,7 +3,7 @@ import { nftService } from "../../db/service/nft";
 import Route from "./route";
 
 class NftRoute extends Route {
-  private _nftController: NftController = new NftController(nftService);
+  private _nftController: NftController = new NftController();
 
   constructor() {
     super();

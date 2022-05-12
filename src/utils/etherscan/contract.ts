@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import fetch, { Response } from "node-fetch";
 import fetchApi from "../fetchApi";
-import { Nft } from "../../db/entity/Nft";
+import { Nft } from "../../db/entity/nft.entity";
 import {RequestConfig} from "../request.config";
 
 dotenv.config();

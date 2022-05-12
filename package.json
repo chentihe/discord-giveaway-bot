@@ -29,9 +29,9 @@
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^6.19.0",
-    "sequelize-typescript": "^2.1.3",
-    "typeorm": "^0.3.6"
+    "typedi": "^0.10.0",
+    "typeorm": "^0.3.6",
+    "typeorm-typedi-extensions": "^0.4.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
