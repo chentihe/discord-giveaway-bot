@@ -15,10 +15,6 @@ const fetchApi = async <T>(requestConfig: RequestConfig, applyData?: Function): 
     const data = await response.json() as T;
 
     return applyData ? applyData(data) : data;
-
-    (data) => {
-        return data.result.shift();
-      }
 }
 
 export default fetchApi;

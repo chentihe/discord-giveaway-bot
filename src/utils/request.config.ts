@@ -15,11 +15,11 @@ export interface RequestConfig {
 export interface EtherScan {
   status: string,
   message: string,
-  result: Array<Object>
+  result: Array<Contract>
 }
 
-export interface Contract      {
-  SourceCode: string
+export interface Contract {
+  SourceCode: string,
   ABI:string,
   ContractName: string,
   CompilerVersion:string,

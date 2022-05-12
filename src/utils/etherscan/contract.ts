@@ -1,13 +1,16 @@
 import dotenv from "dotenv";
-import fetch, { Response } from "node-fetch";
 import fetchApi from "../fetchApi";
 import { Nft } from "../../db/entity/nft.entity";
-import {RequestConfig} from "../request.config";
+import {
+  Contract,
+  EtherScan,
+  RequestConfig,
+  RequestMethod,
+} from "../request.config";
 
 dotenv.config();
 
 const saveNftContract = async (address: string): Promise<Nft> => {
-
   const params: Object = {
     module: "contract",
     action: "getsourcecode",
@@ -15,24 +18,31 @@ const saveNftContract = async (address: string): Promise<Nft> => {
     apikey: process.env.ETHERSCAN_API_KEY,
   };
 
-  const url: URL = new URL(process.env.ETHERSCAN_ENDPOINT!);
+  const etherUrl: URL = new URL(process.env.ETHERSCAN_ENDPOINT!);
 
-  url.search = new URLSearchParams(JSON.stringify(params)).toString();
+  etherUrl.search = new URLSearchParams(JSON.stringify(params)).toString();
 
-  const newNft: Object = await fetchApi<{
-    status: string;
-    message: string;
-    result: Array<Object>;
-  }>(
-    {url: url.href}, (data: EtherSacn) => { return data.result.shift() });
+  const newNft: Contract = await fetchApi<EtherScan>(
+    { url: etherUrl.href },
+    (data: EtherScan) => {
+      return data.result.shift();
+    }
+  );
 
-  const response: Response = await fetchApi();
+  const nftUrl: URL = new URL(`${process.env.BASE_URL!}/nfts`);
 
-  if (!response.ok) {
-    throw new Error("[Discord] cannot save the nft!!");
-  }
+  const requestConfig: RequestConfig = {
+    url: nftUrl.href,
+    method: RequestMethod.POST,
+    headers: { "Content-Type": "application/json" },
+    body: {
+      contractId: address,
+      name: newNft.ContractName,
+      abi: newNft.ABI,
+    },
+  };
 
-  return response.json().then((data) => data as Nft);
+  return fetchApi(requestConfig);
 };
 
 export default saveNftContract;
