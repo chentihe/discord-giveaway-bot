@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Intents } from "discord.js";
+import { Collection, Intents } from "discord.js";
 import { Client } from "discordx";
 import { GiveawaysManager } from "discord-giveaways";
 
@@ -18,6 +18,10 @@ class Bot extends Client {
     },
   });
 
+  private _command = new Collection();
+
+  private _alias = new Collection();
+
   constructor() {
     super({
       simpleCommand: {
@@ -34,6 +38,14 @@ class Bot extends Client {
 
   public get giveawaysManager(): GiveawaysManager {
     return this._giveawaysManager;
+  }
+
+  public get command() {
+    return this._command;
+  }
+
+  public get alias() {
+    return this._alias;
   }
 }
 

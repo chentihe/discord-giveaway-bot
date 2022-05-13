@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { RequestConfig } from "./request.config";
 
-const fetchApi = async <T>(requestConfig: RequestConfig, applyData?: Function): Promise<T> => {
+const fetchApi = async <T>(requestConfig: RequestConfig): Promise<T> => {
     const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
         headers: requestConfig.headers ? requestConfig.headers : {},
@@ -14,7 +14,7 @@ const fetchApi = async <T>(requestConfig: RequestConfig, applyData?: Function): 
 
     const data = await response.json() as T;
 
-    return applyData ? applyData(data) : data;
+    return data;
 }
 
 export default fetchApi;

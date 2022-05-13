@@ -22,12 +22,11 @@ const saveNftContract = async (address: string): Promise<Nft> => {
 
   etherUrl.search = new URLSearchParams(JSON.stringify(params)).toString();
 
-  const newNft: Contract = await fetchApi<EtherScan>(
-    { url: etherUrl.href },
-    (data: EtherScan) => {
-      return data.result.shift();
-    }
-  );
+  const etherScan: EtherScan = await fetchApi<EtherScan>({
+    url: etherUrl.href,
+  });
+
+  const newNft: Contract = etherScan.result[0];
 
   const nftUrl: URL = new URL(`${process.env.BASE_URL!}/nfts`);
 
