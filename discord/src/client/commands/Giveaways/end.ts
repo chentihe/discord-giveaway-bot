@@ -1,61 +1,77 @@
-const config = {
-  name: "end",
-  description: "Ends a giveaway.",
-  usage: "[message-id]",
-  category: "Giveaways",
-  accessableby: "Admins",
-  aliases: [], // To add custom aliases just type ["alias1", "alias2"].
-};
+import { TextChannel } from "discord.js";
+import {
+  Discord,
+  DIService,
+  Permission,
+  SimpleCommand,
+  SimpleCommandMessage,
+  SimpleCommandOption,
+  SimpleCommandOptionType,
+} from "discordx";
+import Container, { Service } from "typedi";
+import Bot from "../../client";
 
-const run = async (client, message, args) => {
-  if (
-    !message.member.hasPermission("MANAGE_MESSAGES") &&
-    !message.member.roles.cache.some((r) => r.name === "Giveaways")
+@Discord()
+@Service()
+class EndCommand {
+  constructor(private _bot: Bot) {}
+
+  @Permission(false)
+  @Permission({
+    id: process.env.PERMISSION_ROLE_ID!,
+    type: "ROLE",
+    permission: true,
+  })
+  @SimpleCommand("end", { argSplitter: " " })
+  async end(
+    @SimpleCommandOption("messageid", { type: SimpleCommandOptionType.String })
+    giveawayId: string,
+    command: SimpleCommandMessage
   ) {
-    return message.channel.send(
-      ":boom: You need to have the `MANAGE_MESSAGES` permissions to end giveaways."
-    );
-  }
-
-  if (!args[0]) {
-    return message.channel.send(
-      ":boom: Uh oh, I couldn't find that message! Try again!"
-    );
-  }
-
-  let giveaway =
-    client.giveawaysManager.giveaways.find((g) => g.prize === args.join(" ")) ||
-    client.giveawaysManager.giveaways.find((g) => g.messageID === args[0]);
-
-  if (!giveaway) {
-    return message.channel.send(
-      ":boom: Hm. I can't seem to find a giveaway for `" + args.join(" ") + "`."
-    );
-  }
-
-  client.giveawaysManager
-    .edit(giveaway.messageID, {
-      setEndTimestamp: Date.now(),
-    })
-    .then(() => {
-      message.channel.send(
-        "Giveaway will end in less than " +
-          client.giveawaysManager.options.updateCountdownEvery / 1000 +
-          " seconds..."
+    if (DIService.container) {
+      const clazz: EndCommand = (DIService.container as Container).get(
+        EndCommand
       );
-    })
-    .catch((e) => {
-      if (
-        e.startsWith(
-          `Giveaway with message ID ${giveaway.messageID} has already ended.`
-        )
-      ) {
-        message.channel.send("This giveaway has already ended!");
-      } else {
-        console.error(e);
-        message.channel.send("An error occurred...");
-      }
-    });
-};
 
-export { config, run };
+      let giveaway = clazz._bot.giveawaysManager.giveaways.find(
+        (g) => g.messageId === giveawayId
+      );
+
+      if (!giveaway) {
+        return (command.message.channel as TextChannel).send(
+          ":boom: Hm. I can't seem to find a giveaway for `" + giveawayId + "`."
+        );
+      }
+
+      clazz._bot.giveawaysManager
+        .edit(giveaway.messageId, {
+          setEndTimestamp: Date.now(),
+        })
+        .then(() => {
+          (command.message.channel as TextChannel).send(
+            "Giveaway will end in less than " +
+              clazz._bot.giveawaysManager.options.endedGiveawaysLifetime! / 1000 +
+              " seconds..."
+          );
+        })
+        .catch((e) => {
+          if (
+            e.startsWith(
+              `Giveaway with message ID ${
+                giveaway!.messageId
+              } has already ended.`
+            )
+          ) {
+            (command.message.channel as TextChannel).send(
+              "This giveaway has already ended!"
+            );
+          } else {
+            console.error(e);
+            (command.message.channel as TextChannel).send(
+              "An error occurred..."
+            );
+          }
+        });
+    }
+  }
+}

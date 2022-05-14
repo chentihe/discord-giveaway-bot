@@ -4,8 +4,12 @@ import Bot from "./client/client";
 import LoadCommands from "./client/handlers/command";
 import LoadEvents from "./client/handlers/event";
 import { database } from "./db/databaseConnector";
+import {DIService} from "discordx";
+import {Container} from "typedi";
 
 const port = process.env.PORT || 7000;
+
+DIService.container = Container;
 
 const bot = new Bot();
 

@@ -1,9 +1,11 @@
-const eventName = "giveawayReactionRemoved";
+import { ArgsOf, Discord, Guard, On } from "discordx";
 
-const eventFunction = (giveaway, member, reaction) => {
-  console.log(
-    `${member.user.tag} unreact to giveaway #${giveaway.messageID} (${reaction.emoji.name})`
-  );
-};
-
-export { eventName, eventFunction };
+@Discord()
+class GiveawayReactionRemoved {
+  @On("giveawayReactionRemoved")
+  onGiveawayReactionRemoved([giveaway, member, reaction]: ArgsOf<"giveawayReactionRemoved">){
+    console.log(
+      `${member.user.tag} unreact to giveaway #${giveaway.messageId} (${reaction.emoji.name})`
+    );
+  }
+}

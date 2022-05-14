@@ -1,38 +1,40 @@
-import fs from "fs";
 import { MessageActionRow, MessageButton } from "discord.js";
+import { ArgsOf, Discord, Guard, On } from "discordx";
+import dotenv from "dotenv";
 
-const { Bot_Info } = JSON.parse(fs.readFileSync("config.json", "utf-8"));
+dotenv.config();
 
-const eventName = "interactionCreate";
+@Discord()
+class InteractionCreate {
+  @On("interactionCreate")
+  onInteraction([interaction]: ArgsOf<"interactionCreate">){
+    if(!interaction.isButton()) return;
 
-const eventFunction = async (client, interaction) => {
-  if (!interaction.isButton()) return;
-  const fields = interaction.message.embeds.shift().fields;
-  const giveaway = fields.find((field) => field.name === "Giveaway:").value;
-  const user = interaction.user.id;
-  const nft = fields.find((field) => field.name === "Contract Address:").value;
+    const fields = interaction.message.embeds.shift()?.fields;
+    const giveaway = fields?.find(field => field.name === "Giveaway:")?.value;
+    const user = interaction.user.id;
+    const nft = fields?.find(field => field.name === "Contract Address:")?.value;
 
-  const url = new URL(Bot_Info.validateUrl);
-  const params = {
-    user: user,
-    giveaway: giveaway,
-    nft: nft,
-  };
-  Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
+    const url = new URL(process.env.VALIDATE_URL!);
+    const params = {
+      user: user,
+      giveaway: giveaway,
+      nft: nft
+    };
 
-  const row = new MessageActionRow().addComponents(
-    new MessageButton()
+    url.search = new URLSearchParams(JSON.stringify(params)).toString();
+
+    const row: MessageActionRow = new MessageActionRow().addComponents(
+      new MessageButton()
       .setLabel("Connect Wallet")
       .setStyle("LINK")
-      .setURL(url.toString())
-  );
+      .setURL(url.href)
+    )
 
-  interaction.reply({
-    // content can modify like "memeber: userName is going to validate nft: nftName"
-    content: `giveaway: ${giveaway} \n member: ${user} \n nft: ${nft}`,
-    components: [row],
-    ephemeral: true,
-  });
-};
-
-export { eventName, eventFunction };
+    interaction.reply({
+      content: `giveaway: ${giveaway} \n member: ${user} \n nft: ${nft}`,
+      components: [row],
+      ephemeral: true
+    })
+  }
+}

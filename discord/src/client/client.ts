@@ -18,9 +18,9 @@ class Bot extends Client {
     },
   });
 
-  private _command = new Collection();
+  private _command: Collection<string, Function> = new Collection();
 
-  private _alias = new Collection();
+  private _alias: Collection<string, Function> = new Collection();
 
   constructor() {
     super({
@@ -40,11 +40,11 @@ class Bot extends Client {
     return this._giveawaysManager;
   }
 
-  public get command() {
+  public get command(): Collection<string, Function> {
     return this._command;
   }
 
-  public get alias() {
+  public get alias(): Collection<string, Function> {
     return this._alias;
   }
 }

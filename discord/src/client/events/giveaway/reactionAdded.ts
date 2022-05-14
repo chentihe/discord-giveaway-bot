@@ -1,9 +1,11 @@
-const eventName = "giveawayReactionAdded";
+import { ArgsOf, Discord, Guard, On } from "discordx";
 
-const eventFunction = (giveaway, member, reaction) => {
-  console.log(
-    `${member.user.tag} entered giveaway #${giveaway.messageID} (${reaction.emoji.name})`
-  );
-};
-
-export { eventName, eventFunction };
+@Discord()
+class GiveawayReactionAdded {
+  @On("giveawayReactionAdded")
+  onGiveawayReactionAdded([giveaway, member, reaction]: ArgsOf<"giveawayReactionAdded">){
+    console.log(
+      `${member.user.tag} entered giveaway #${giveaway.messageId} (${reaction.emoji.name})`
+    );
+  }
+}
