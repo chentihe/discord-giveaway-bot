@@ -1,7 +1,7 @@
 import { GuildMember } from "discord.js";
 import dotenv from "dotenv";
-import { Bonus } from "../db/entity/bonus.entity";
-import fetchApi from "./fetchApi";
+import { Bonus } from "../../db/entity/bonus.entity";
+import fetchApi from "../fetchApi";
 
 dotenv.config();
 

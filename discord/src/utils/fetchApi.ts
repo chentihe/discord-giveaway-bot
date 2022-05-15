@@ -1,5 +1,5 @@
 import fetch, { Response } from "node-fetch";
-import { RequestConfig } from "./request.config";
+import { RequestConfig } from ".";
 
 const fetchApi = async <T>(requestConfig: RequestConfig): Promise<T> => {
   const response: Response = await fetch(requestConfig.url, {

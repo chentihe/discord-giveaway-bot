@@ -4,7 +4,7 @@ import {
   DIService,
   Permission,
   SimpleCommand,
-  SimpleCommandMessage
+  SimpleCommandMessage,
 } from "discordx";
 import dotenv from "dotenv";
 import Container, { Service } from "typedi";
@@ -26,7 +26,9 @@ class HelpCommand {
   @SimpleCommand("help")
   async reroll(command: SimpleCommandMessage) {
     if (DIService.container) {
-      const clazz: HelpCommand = (DIService.container as Container).get(HelpCommand);
+      const clazz: HelpCommand = (DIService.container as Container).get(
+        HelpCommand
+      );
 
       let avatarOptions: ImageURLOptions = {
         format: "png",
@@ -92,9 +94,9 @@ class HelpCommand {
       if (command.message.guild) {
         (command.message.channel as TextChannel).send("Check your DMs!");
         command.message.delete();
-        command.message.author.send(embed);
+        command.message.author.send({ embeds: [embed] });
       } else {
-        command.message.author.send(embed);
+        command.message.author.send({ embeds: [embed] });
       }
     }
   }

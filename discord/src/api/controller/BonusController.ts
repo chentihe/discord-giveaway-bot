@@ -4,14 +4,14 @@ import { Bonus } from "../../db/entity/bonus.entity";
 import { Repository } from "typeorm";
 
 class BonusController {
-  private _bonusRepository = database.getRepository(Bonus);
+  private _bonusRepository: Repository<Bonus> = database.getRepository(Bonus);
 
-  public async create(req: Request, res: Response) {
+  public async create(req: Request, res: Response): Promise<Response<Bonus>> {
     const data = await this.bonusRepository.save(req.body);
     return res.status(201).send(JSON.stringify(data));
   }
 
-  public async retrieve(req: Request, res: Response) {
+  public async retrieve(req: Request, res: Response): Promise<Response<Bonus>> {
     const data = await this.bonusRepository.findOneBy({
       contractId: req.params.contractId,
       userId: req.params.userId,

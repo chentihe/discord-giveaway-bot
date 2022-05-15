@@ -6,14 +6,14 @@ import { Repository } from "typeorm";
 
 @Service()
 class NftController {
-  private _nftRepository = database.getRepository(Nft);
+  private _nftRepository: Repository<Nft> = database.getRepository(Nft);
 
-  public async create(req: Request, res: Response) {
+  public async create(req: Request, res: Response): Promise<Response<Nft>> {
     const data = await this.nftRepository.save(req.body);
     return res.status(201).send(JSON.stringify(data));
   }
 
-  public async retrieve(req: Request, res: Response) {
+  public async retrieve(req: Request, res: Response): Promise<Response<Nft>> {
     const data = await this.nftRepository.findOneBy({
       contractId: req.params.nftId,
     });

@@ -1,4 +1,3 @@
-import { Express } from "express-serve-static-core";
 import Bot from "../../src/client/client";
 
 declare global {

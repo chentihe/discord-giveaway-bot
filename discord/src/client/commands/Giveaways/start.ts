@@ -15,7 +15,7 @@ import {
   SimpleCommandOptionType,
 } from "discordx";
 import saveNftContract from "../../../utils/etherscan/contract.js";
-import fetchNftAmount from "../../../utils/bonus.js";
+import fetchNftAmount from "../../../utils/bonusEntry/bonus.js";
 import Bot from "../../client";
 import { Nft } from "../../../db/entity/nft.entity";
 

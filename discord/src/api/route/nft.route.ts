@@ -1,5 +1,4 @@
 import NftController from "../controller/NftController";
-import { nftService } from "../../db/service/nft";
 import Route from "./route";
 
 class NftRoute extends Route {

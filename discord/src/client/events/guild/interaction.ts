@@ -1,5 +1,5 @@
 import { MessageActionRow, MessageButton } from "discord.js";
-import { ArgsOf, Discord, Guard, On } from "discordx";
+import { ArgsOf, Discord, On } from "discordx";
 import dotenv from "dotenv";
 
 dotenv.config();

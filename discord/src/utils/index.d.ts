@@ -1,3 +1,5 @@
+import { HeadersInit } from "node-fetch";
+
 export enum RequestMethod {
   POST = "POST",
   GET = "GET",
@@ -8,7 +10,7 @@ export enum RequestMethod {
 export interface RequestConfig {
   url: string;
   method?: RequestMethod;
-  headers?: any;
+  headers?: HeadersInit;
   body?: Object;
 }
 

@@ -1,9 +1,8 @@
 import BonusController from "../controller/BonusController";
-import { bonusService } from "../../db/service/bonus";
 import Route from "./route";
 
 class BonusRoute extends Route {
-  private _bonusController: BonusController = new BonusController(bonusService);
+  private _bonusController: BonusController = new BonusController();
 
   constructor() {
     super();

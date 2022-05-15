@@ -6,7 +6,7 @@ import {
   EtherScan,
   RequestConfig,
   RequestMethod,
-} from "../request.config";
+} from "..";
 
 dotenv.config();
 
@@ -22,26 +22,28 @@ const saveNftContract = async (address: string): Promise<Nft> => {
 
   etherUrl.search = new URLSearchParams(JSON.stringify(params)).toString();
 
-  const etherScan: EtherScan = await fetchApi<EtherScan>({
+  const newNft: void | Contract = await fetchApi<EtherScan>({
     url: etherUrl.href,
-  });
-
-  const newNft: Contract = etherScan.result[0];
+  })
+    .then((etherScan) => {
+      return etherScan.result[0];
+    })
+    .catch((error) => console.log(error));
 
   const nftUrl: URL = new URL(`${process.env.BASE_URL!}/nfts`);
 
-  const requestConfig: RequestConfig = {
+  const nftDto: RequestConfig = {
     url: nftUrl.href,
     method: RequestMethod.POST,
     headers: { "Content-Type": "application/json" },
     body: {
       contractId: address,
-      name: newNft.ContractName,
-      abi: newNft.ABI,
+      name: newNft!.ContractName,
+      abi: newNft!.ABI,
     },
   };
 
-  return fetchApi(requestConfig);
+  return fetchApi(nftDto);
 };
 
 export default saveNftContract;
