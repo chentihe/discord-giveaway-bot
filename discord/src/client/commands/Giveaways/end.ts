@@ -1,5 +1,6 @@
 import { TextChannel } from "discord.js";
 import {
+  Client,
   Discord,
   DIService,
   Permission,
@@ -14,8 +15,6 @@ import Bot from "../../client";
 @Discord()
 @Service()
 class EndCommand {
-  constructor(private _bot: Bot) {}
-
   @Permission(false)
   @Permission({
     id: process.env.PERMISSION_ROLE_ID!,
@@ -29,11 +28,9 @@ class EndCommand {
     command: SimpleCommandMessage
   ) {
     if (DIService.container) {
-      const clazz: EndCommand = (DIService.container as Container).get(
-        EndCommand
-      );
+      const clazz: Bot = Container.get(Bot);
 
-      let giveaway = clazz._bot.giveawaysManager.giveaways.find(
+      let giveaway = clazz.giveawaysManager.giveaways.find(
         (g) => g.messageId === giveawayId
       );
 
@@ -43,14 +40,14 @@ class EndCommand {
         );
       }
 
-      clazz._bot.giveawaysManager
+      clazz.giveawaysManager
         .edit(giveaway.messageId, {
           setEndTimestamp: Date.now(),
         })
         .then(() => {
           (command.message.channel as TextChannel).send(
             "Giveaway will end in less than " +
-              clazz._bot.giveawaysManager.options.endedGiveawaysLifetime! / 1000 +
+              clazz.giveawaysManager.options.endedGiveawaysLifetime! / 1000 +
               " seconds..."
           );
         })

@@ -1,17 +1,17 @@
 import dotenv from "dotenv";
 
 dotenv.config();
-import { ArgsOf, Discord, On } from "discordx";
+import { ArgsOf, Discord, Once, Client } from "discordx";
 
 @Discord()
 class ClientReady {
-  @On("ready")
+  @Once("ready")
   async onReady([client]: ArgsOf<"ready">) {
     // make sure all guilds are in cache
     await client.guilds.fetch();
 
     // init all application commands
-    await client.initApplicationCommands({
+    await (client as Client).initApplicationCommands({
       guild: { log: true },
       global: { log: true },
     });
@@ -25,7 +25,7 @@ class ClientReady {
     ];
 
     // init permissions; enabled log to see changes
-    await client.initApplicationPermissions(true);
+    await (client as Client).initApplicationPermissions(true);
 
     // uncomment this line to clear all guild commands,
     // useful when moving to global commands from guild commands

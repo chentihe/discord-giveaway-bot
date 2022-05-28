@@ -7,8 +7,9 @@ dotenv.config();
 
 export const database: DataSource = new DataSource({
   type: "postgres",
-  url: process.env.POSTGRES_URL,
+  url: process.env.DATABASE_URL,
   entities: [Nft, Bonus],
   synchronize: true,
   logging: true,
+  ssl: { rejectUnauthorized: false }
 });

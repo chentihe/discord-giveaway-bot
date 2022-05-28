@@ -26,9 +26,7 @@ class HelpCommand {
   @SimpleCommand("help")
   async reroll(command: SimpleCommandMessage) {
     if (DIService.container) {
-      const clazz: HelpCommand = (DIService.container as Container).get(
-        HelpCommand
-      );
+      const clazz: Bot = Container.get(Bot);
 
       let avatarOptions: ImageURLOptions = {
         format: "png",
@@ -38,11 +36,11 @@ class HelpCommand {
 
       const embed = new MessageEmbed()
         .setAuthor({
-          name: clazz._bot.user!.username,
+          name: clazz.user!.username,
           url: "https://github.com/fez6/discord-giveaway-bot",
-          iconURL: clazz._bot.user!.displayAvatarURL(avatarOptions),
+          iconURL: clazz.user!.displayAvatarURL(avatarOptions),
         })
-        .setThumbnail(clazz._bot.user!.displayAvatarURL(avatarOptions))
+        .setThumbnail(clazz.user!.displayAvatarURL(avatarOptions))
         .setTitle("Help")
         .setURL("https://github.com/fez6/discord-giveaway-bot")
         .setColor([114, 137, 218])
@@ -88,7 +86,7 @@ class HelpCommand {
         )
         .setFooter({
           text: "Made with 💖 and discord.js by fez",
-          iconURL: clazz._bot.user!.displayAvatarURL(avatarOptions),
+          iconURL: clazz.user!.displayAvatarURL(avatarOptions),
         });
 
       if (command.message.guild) {

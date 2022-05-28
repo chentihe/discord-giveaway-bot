@@ -4,6 +4,9 @@ import Bot from "./client/client";
 import { database } from "./db/databaseConnector";
 import { DIService } from "discordx";
 import { Container } from "typedi";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const port = process.env.PORT || 7000;
 

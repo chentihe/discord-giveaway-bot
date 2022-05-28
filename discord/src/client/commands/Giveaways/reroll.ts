@@ -14,8 +14,6 @@ import Bot from "../../client";
 @Discord()
 @Service()
 class RerollCommand {
-  constructor(private _bot: Bot) {}
-
   @Permission(false)
   @Permission({
     id: process.env.PERMISSION_ROLE_ID!,
@@ -40,11 +38,9 @@ class RerollCommand {
     }
 
     if (DIService.container) {
-      const clazz: RerollCommand = (DIService.container as Container).get(
-        RerollCommand
-      );
+      const clazz: Bot = Container.get(Bot);
 
-      let giveaway = clazz._bot.giveawaysManager.giveaways.find(
+      let giveaway = clazz.giveawaysManager.giveaways.find(
         (g) => g.messageId === giveawayId
       );
 
@@ -54,7 +50,7 @@ class RerollCommand {
         );
       }
 
-      clazz._bot.giveawaysManager
+      clazz.giveawaysManager
         .reroll(giveaway.messageId)
         .then(() => {
           (command.message.channel as TextChannel).send("Giveaway rerolled!");
